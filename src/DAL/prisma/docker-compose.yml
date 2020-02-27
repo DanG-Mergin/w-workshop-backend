@@ -1,0 +1,44 @@
+version: '3'
+services:
+  prisma:
+    image: prismagraphql/prisma:1.34
+    restart: always
+    ports:
+      - '4466:4466'
+    environment:
+      PRISMA_CONFIG: |
+        managementApiSecret: imeanthisissupposedtofixtheissue
+        port: 4466
+        databases:
+          default:
+            connector: postgres
+            host: postgres
+            port: 5432
+            user: prisma
+            password: 7gy9an431!gh!pp08u2 #remove to env file and from git
+  pgAdmin:
+    restart: always
+    image: dpage/pgadmin4
+    ports:
+        - "8000:80"
+    env_file: 
+      - database.env
+    # environment:
+    #     PGADMIN_DEFAULT_EMAIL: 
+    #     PGADMIN_DEFAULT_PASSWORD: 
+    volumes:
+        - pgadmin:/var/lib/pgadmin
+  postgres:
+    image: postgres:10.3
+    hostname: postgres # for connecting from the same container.. as we are by using this singluar compose file
+    restart: always
+    env_file:
+      - database.env # configure postgres
+    # environment:
+    #   POSTGRES_USER: 
+    #   POSTGRES_PASSWORD: 
+    volumes:
+      - postgres:/var/lib/postgresql/data
+volumes:
+  postgres: ~
+  pgadmin: ~
